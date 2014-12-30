@@ -13,8 +13,16 @@ All methods can be used to mock a client requests on the server as well as serve
 
 ## Table of Contents
 
-!toc (minlevel=2 omit="Table of Contents")
+<!-- !toc (minlevel=2 omit="Table of Contents") -->
 
+* [Request](#request)
+* [Response](#response)
+* [Usage](#usage)
+* [Documentation](#documentation)
+* [Contribution and License Agreement](#contribution-and-license-agreement)
+* [License](#license)
+
+<!-- toc! -->
 
 ## Request
 
@@ -33,83 +41,82 @@ All methods can be used to mock a server response such allowing to unit-test e.g
 
 States are stored in the interal object `Response._internal` and can be queried from your unit-tests
 
-	_internal: {
-	  headers: {},            // {Object}  Response headers
-	  trailers: {},           // {Object}  Trailing Response headers
-	  buffer: new Buffer(''), // {Buffer}  Internal buffer represents response body
-	  timedout: false,        // {Boolean} If true than `Response.setTimeout` was called.
-	  ended: false,           // {Boolean} If true than `Response.end` was called.
-	}
+    _internal: {
+      headers: {},            // {Object}  Response headers
+      trailers: {},           // {Object}  Trailing Response headers
+      buffer: new Buffer(''), // {Buffer}  Internal buffer represents response body
+      timedout: false,        // {Boolean} If true than `Response.setTimeout` was called.
+      ended: false,           // {Boolean} If true than `Response.end` was called.
+    }
 
 ## Usage
 
 This is a unit-test using mocha which illustrates the usage. The example can be found in [./test/index.mocha.js](./test/index.mocha.js)
 
-``` javascript
+```javascript
 describe('example', function(){
-	// a middleware function under test
-	var middleware = function(req, res, next) {
-		var regex = /^(?:\/test)(\/.*|$)/;
-		req.params = '';
+    // a middleware function under test
+    var middleware = function(req, res, next) {
+        var regex = /^(?:\/test)(\/.*|$)/;
+        req.params = '';
 
-		req.on('data', function(data){
-			req.params += data; // a simple body parser
-		});
-		req.on('end', function(){
-			if (regex.test(req.url)) {
-				req.url = req.url.replace(regex, '$1') || '/';
-				res.writeHead(200, { 'Cache-Control': 'max-age=300'});
-				res.write('this is a test');
-				res.end();
-			}
-			else {
-				next && next();
-			}
-		});
-	};
-	it('shall respond with a 200', function(done){
-		var req = new mock.Request({
-					url: '/test',
-					method: 'POST',
-					buffer: new Buffer('name=mock&version=first')
-				});
-		var res = new mock.Response({
-				onEnd: function() {
-					// the test ends here
-					assert.equal(req.url, '/');
-					assert.equal(req.params, 'name=mock&version=first');
-					assert.equal(res.statusCode, 200);
-					assert.equal(res.headersSent, true);
-					assert.equal(res.getHeader('Cache-Control'), 'max-age=300');
-					assert.equal(res.hasEnded(), true);
-					done();
-				}
-			});
-		middleware(req, res, function(){
-			assert.equal('test never', 'reaches here');
-		});
-	});
-	it('shall call next middleware', function(done){
-		var req = new mock.Request({
-					url: '/other',
-					method: 'POST',
-					buffer: new Buffer('name=mock&version=first')
-				});
-		var res = new mock.Response({
-				onEnd: function() {
-					assert.equal('test never', 'reaches here');
-				}
-			});
-		middleware(req, res, function(){
-			// the test ends here
-			assert.equal(req.url, '/other');
-			assert.equal(res.headersSent, false);
-			assert.equal(res.hasEnded(), false);
-			done();
-		});
-	});
+        req.on('data', function(data){
+            req.params += data; // a simple body parser
+        });
+        req.on('end', function(){
+            if (regex.test(req.url)) {
+                req.url = req.url.replace(regex, '$1') || '/';
+                res.writeHead(200, { 'Cache-Control': 'max-age=300'});
+                res.write('this is a test');
+                res.end();
+            }
+            else {
+                next && next();
+            }
+        });
+    };
+    it('shall respond with a 200', function(done){
+        var req = new mock.Request({
+                    url: '/test',
+                    method: 'POST',
+                    buffer: new Buffer('name=mock&version=first')
+                });
+        var res = new mock.Response({
+                onEnd: function() {
+                    // the test ends here
+                    assert.equal(req.url, '/');
+                    assert.equal(req.params, 'name=mock&version=first');
+                    assert.equal(res.statusCode, 200);
+                    assert.equal(res.headersSent, true);
+                    assert.equal(res.getHeader('Cache-Control'), 'max-age=300');
+                    assert.equal(res.hasEnded(), true);
+                    done();
+                }
+            });
+        middleware(req, res, function(){
+            assert.equal('test never', 'reaches here');
+        });
+    });
+    it('shall call next middleware', function(done){
+        var req = new mock.Request({
+                    url: '/other',
+                    method: 'POST',
+                    buffer: new Buffer('name=mock&version=first')
+                });
+        var res = new mock.Response({
+                onEnd: function() {
+                    assert.equal('test never', 'reaches here');
+                }
+            });
+        middleware(req, res, function(){
+            // the test ends here
+            assert.equal(req.url, '/other');
+            assert.equal(res.headersSent, false);
+            assert.equal(res.hasEnded(), false);
+            done();
+        });
+    });
 });
-
 ```
 
 ## Documentation
@@ -134,3 +141,4 @@ Copyright (c) 2014-, Commenthol. (MIT License)
 See [LICENSE][] for more info.
 
 [LICENSE]: ./LICENSE
+
