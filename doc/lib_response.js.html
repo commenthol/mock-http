@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: lib/response.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: lib/response.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use strict';
+
+/**
+ * @module lib/Response
+ * @copyright 2014- commenthol
+ * @license MIT
+ */
+
+var util = require('util');
+var Writable = require('streamss-shim').Writable;
+var assign = require('./assign');
+var append = require('./append');
+var pluck = require('./pluck');
+
+/**
+ * Mock implementation of Class http.ServerResponse
+ *
+ * It behaves like the class, apart from really handling a socket. I.e. it implements the Writable Stream Class as well.
+ * All methods can be used to mock a server response such allowing to unit-test e.g. connect middleware
+ *
+ * States are stored in the interal object `Response._internal` and can be queried from your unit-tests
+ *
+ *     _internal: {
+ *       headers: {},            // {Object}  Response headers
+ *       trailers: {},           // {Object}  Trailing Response headers
+ *       buffer: new Buffer(''), // {Buffer}  Internal buffer represents response body
+ *       timedout: false,        // {Boolean} If true than `Response.setTimeout` was called.
+ *       ended: false,           // {Boolean} If true than `Response.end` was called.
+ *     }
+ *
+ * @class
+ * @see http://nodejs.org/api/http.html#http_class_http_serverresponse
+ * @param {Object} [options] - options object
+ * @param {Number} options.highWaterMark - highWaterMark for Writable Stream
+ * @param {Function} options.onEnd - `function()` called on "end"
+ * @param {Function} options.onFinish - `function()` called on "finish" event
+ * @return {Stream.Writable} Writable Stream
+ */
+function Response(options) {
+
+	options = options || {};
+	Writable.call(this, pluck('highWaterMark', options));
+
+	assign(this, {
+			_internal: {
+				headers: {},                /// {Object}  Response headers
+				trailers: {},               /// {Object}  Trailing Response headers
+				buffer: new Buffer(''),     /// {Buffer}  Internal buffer represents response body
+				timedout: false,            /// {Boolean} If true than `Response.setTimeout` was called.
+				ended: false,               /// {Boolean} If true than `Response.end` was called.
+				timer: null,                /// {Timer}   The timer object used by `Response.setTimeout`
+			},
+			socket: {},                     /// {Object}  Dummy object for socket
+			connection: {},                 /// {Object}  Dummy object for connection
+			statusCode: undefined,          /** @see http://nodejs.org/api/http.html#http_response_statuscode */
+			headersSent: false,             /** @see http://nodejs.org/api/http.html#http_response_headerssent */
+			sendDate: true,                 /** @see http://nodejs.org/api/http.html#http_response_senddate */
+		}
+	);
+
+	this.on('end', function() {
+		options.onEnd &amp;&amp; options.onEnd();
+	});
+	this.on('finish', function() {
+		options.onFinish &amp;&amp; options.onFinish();
+	});
+
+	return this;
+}
+
+util.inherits(Response, Writable);
+
+/** @see http://nodejs.org/api/http.html#http_response_end_data_encoding */
+Response.prototype.end = function (data, encoding, cb) {
+	var self = this;
+	if (self._internal.timedout &amp;&amp; self._internal.ended) {
+		// socket is already destroyed!
+		return;
+	}
+	self._internal.ended = true;
+	self.statusCode = self.statusCode || 200;
+	self.headersSent = true;
+	clearTimeout(self._internal.timer);
+	self.emit('end');
+	Writable.prototype.end.call(self, data, encoding, cb);
+};
+
+/** @see http://nodejs.org/api/http.html#http_response_write_chunk_encoding */
+Response.prototype._write = function(data, encoding, done) {
+	this._internal.buffer = append(this._internal.buffer, data, encoding);
+	done();
+};
+
+assign(Response.prototype, {
+    /** @see http://nodejs.org/api/http.html#http_response_writecontinue */
+	writeContinue: function(){
+		this.headersSent = true;
+		this.statusCode = 100;
+	},
+    /** @see http://nodejs.org/api/http.html#http_response_writehead_statuscode_reasonphrase_headers */
+	writeHead: function(statusCode, reasonPhrase, headers){
+		var i;
+		if (typeof reasonPhrase === 'object') {
+			headers = reasonPhrase;
+			reasonPhrase = null;
+		}
+		if (reasonPhrase) {
+			this._internal.reasonPhrase = reasonPhrase;
+		}
+		this.statusCode = statusCode;
+		this.headersSent = true;
+		for (i in headers) {
+			this._internal.headers[i] = headers[i];
+		}
+	},
+    /** @see http://nodejs.org/api/http.html#http_response_settimeout_msecs_callback */
+	setTimeout: function(msecs, callback) {
+		var self = this;
+		this._internal.timer = setTimeout(function(){
+			self._internal.timedout = true;
+			if (callback) {
+				callback();
+			} else {
+				self._internal.ended = true;
+			}
+		}, msecs || 0);
+	},
+    /** @see http://nodejs.org/api/http.html#http_response_setheader_name_value */
+	setHeader: function(name, value) {
+		if (this.headersSent) {
+			throw new Error('Can\'t set headers after they are sent.');
+		}
+		else {
+			this._internal.headers[name] = value;
+		}
+	},
+    /** @see http://nodejs.org/api/http.html#http_response_getheader_name */
+	getHeader: function(name) {
+		return this._internal.headers[name];
+	},
+    /** @see http://nodejs.org/api/http.html#http_response_removeheader_name */
+	removeHeader: function(name) {
+		if (this.headersSent) {
+			throw new Error('Can\'t remove headers after they are sent.');
+		}
+		else {
+			if (this._internal.headers[name]) {
+				delete this._internal.headers[name];
+			}
+		}
+	},
+    /** @see http://nodejs.org/api/http.html#http_response_addtrailers_headers */
+	addTrailers: function(headers) {
+		if (this._internal.headers.Trailer) {
+			for (var i in headers) {
+				this._internal.trailers[i] = headers[i];
+			}
+		}
+	},
+});
+
+/**
+ * Test only - get internal buffer
+ * @param {String} [encoding] - Default='utf8'
+ * @return {Buffer}
+ */
+Response.prototype.getBuffer = function(encoding) {
+	return this._internal.buffer.toString(encoding||'utf8');
+};
+/**
+ * Test only - get status if Response has ended
+ * @return {Boolean}
+ */
+Response.prototype.hasEnded = function() {
+	return this._internal.ended;
+};
+/**
+ * Test only - get status if Response has timed-out
+ * @return {Boolean}
+ */
+Response.prototype.hasTimedout = function() {
+	return this._internal.timedout;
+};
+
+module.exports = Response;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-lib_append.html">lib/append</a></li><li><a href="module-lib_assign.html">lib/assign</a></li><li><a href="module-lib_pluck.html">lib/pluck</a></li><li><a href="module-lib_Request.html">lib/Request</a></li><li><a href="module-lib_Response.html">lib/Response</a></li><li><a href="module-mock-http.html">mock-http</a></li></ul><h3>Classes</h3><ul><li><a href="module-lib_Request-Request.html">Request</a></li><li><a href="module-lib_Response-Response.html">Response</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha13</a> on Tue Dec 30 2014 11:48:39 GMT+0100 (CET)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

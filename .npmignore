@@ -1,0 +1,7 @@
+/node_modules
+/doc/scripts
+/doc/fonts
+/tmp
+*.log
+*.tgz
+.*
