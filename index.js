@@ -18,8 +18,8 @@ var Response = require('./lib/response');
  * @param {Function} next - next middleware function
  */
 var M = function(req, res, next) {
-    assign(req, new Request());
-    assign(res, new Response());
+    assign(req, new Request(), false);
+    assign(res, new Response(), false);
     next && next();
 };
 

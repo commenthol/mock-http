@@ -1,6 +1,6 @@
 /node_modules
-/doc/scripts
-/doc/fonts
+/coverage
+/doc
 /tmp
 *.log
 *.tgz

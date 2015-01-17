@@ -136,9 +136,8 @@ all code is your original work.
 
 ## License
 
-Copyright (c) 2014-, Commenthol. (MIT License)
+Copyright (c) 2014-2015, Commenthol. (MIT License)
 
 See [LICENSE][] for more info.
 
 [LICENSE]: ./LICENSE
-

@@ -13,6 +13,7 @@ describe('#mock', function(){
 	it ('call with empty req and res', function(done){
 		var req = {},
 			res = {};
+
 		chain([
 			mock
 		])(req, res, function() {
@@ -25,11 +26,12 @@ describe('#mock', function(){
 
 	it('set response header', function(done){
 		var req = {
-					headers: {
-						userAgent: 'Mozilla/5.0 (Awesome/1.0)'
-					}
-				},
-				res = {};
+				headers: {
+					userAgent: 'Mozilla/5.0 (Awesome/1.0)'
+				}
+			},
+			res = {};
+
 		chain([
 			mock,
 			function(req, res, next) {
@@ -47,11 +49,12 @@ describe('#mock', function(){
 
 	it('call response end', function(done){
 		var req = {
-					headers: {
-						userAgent: 'Mozilla/5.0 (Awesome/1.0)'
-					}
-				},
-				res = {};
+				headers: {
+					userAgent: 'Mozilla/5.0 (Awesome/1.0)'
+				}
+			},
+			res = {};
+
 		chain([
 			mock,
 			function(req, res, next) {
@@ -69,7 +72,8 @@ describe('#mock', function(){
 
 	it('write response', function(done){
 		var req = {},
-				res = {};
+			res = {};
+
 		chain([
 			mock,
 			function(req, res, next) {
@@ -89,7 +93,8 @@ describe('#mock', function(){
 
 	it('pipe', function(done){
 		var req = {},
-				res = {};
+			res = {};
+
 		chain([
 			mock,
 			function(req, res, next) {

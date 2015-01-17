@@ -48,6 +48,30 @@ describe('#Request', function(){
 		assert.equal(req.method, options.method);
 		assert.deepEqual(req.headers, options.headers);
 	});
+	it('can set remoteAddress', function(){
+		var options = {
+			connection: {
+				remoteAddress: '10.0.0.0'
+			}
+		};
+		var req = new Request(options);
+		assert.deepEqual(req.connection, {
+			remoteAddress: '10.0.0.0',
+			remotePort: 51501
+		});
+	});
+	it('can set remotePort', function(){
+		var options = {
+			connection: {
+				remotePort: 80
+			}
+		};
+		var req = new Request(options);
+		assert.deepEqual(req.connection, {
+			remoteAddress: '127.0.0.1',
+			remotePort: 80
+		});
+	});
 	it('can set a request header', function(){
 		var req = new Request();
 		var header = ['user-agent', 'Mozilla/5.0 (Awesome; rv:1.0)'];
