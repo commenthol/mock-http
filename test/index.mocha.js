@@ -41,7 +41,7 @@ describe('#mock', function(){
 		])(req, res, function() {
 			assert.equal(req.url, '/');
 			assert.equal(req.headers.userAgent, 'Mozilla/5.0 (Awesome/1.0)');
-			assert.deepEqual(res.getHeader('Set-Cookie'), ['test=1', 'language=de']);
+			assert.deepEqual(res.getHeader('set-cookie'), ['test=1', 'language=de']);
 			assert.equal(res.headersSent, false);
 			done();
 		});

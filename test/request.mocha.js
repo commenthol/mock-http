@@ -78,6 +78,24 @@ describe('#Request', function(){
 		req.setHeader(header[0], header[1]);
 		assert.equal(req.getHeader(header[0]), header[1]);
 	});
+	it('can set a timeout', function(done) {
+		var url = '/path/?kh=-1&q=node';
+		var req = Request(url);
+		req.setTimeout(20);
+		setTimeout(function(){
+			assert.ok(req._internal.timedout);
+			done();
+		}, 30);
+	});
+	it('can not set a timeout of 0ms', function(done) {
+		var url = '/path/?kh=-1&q=node';
+		var req = Request(url);
+		req.setTimeout(0);
+		setTimeout(function(){
+			assert.ok(!req._internal.timedout);
+			done();
+		}, 10);
+	});
 	it('can stream', function(done){
 		var buf = '';
 		var query = 'name=node&stream=version2';

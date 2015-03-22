@@ -92,7 +92,7 @@ describe('#Response', function(){
 		it('set user-agent', function(){
 			var res = new Response();
 			res.setHeader(h[0], h[1]);
-			assert.equal(res._internal.headers[h[0]], h[1]);
+			assert.equal(res._internal.headers[h[0].toLowerCase()], h[1]);
 			assert.equal(res.getHeader(h[0]), h[1]);
 		});
 		it('set, get and remove user-agent', function(){
@@ -109,7 +109,7 @@ describe('#Response', function(){
 				res.setHeader(h[0], h[1]);
 			} catch(e) {
 				assert.equal(e.message, "Can't set headers after they are sent.");
-				assert.equal(res._internal.headers[h[0]], undefined);
+				assert.equal(res._internal.headers[h[0].toLowerCase()], undefined);
 				done();
 			}
 		});
@@ -130,7 +130,7 @@ describe('#Response', function(){
 				res.removeHeader(headers.cacheControl[0]);
 			} catch(e) {
 				assert.equal(e.message, "Can't remove headers after they are sent.");
-				assert.equal(res._internal.headers[headers.cacheControl[0]], headers.cacheControl[1]);
+				assert.equal(res._internal.headers[headers.cacheControl[0].toLowerCase()], headers.cacheControl[1]);
 				done();
 			}
 		});
