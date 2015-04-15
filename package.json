@@ -1,6 +1,6 @@
 {
   "name": "mock-http",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "mock http request response",
   "main": "index.js",
   "directories": {
@@ -13,7 +13,7 @@
     "test": "mocha",
     "lint": "jshint *.js */*.js",
     "cover": "istanbul cover _mocha --report lcov --report text -- -R dot --check-leaks test/*.mocha.js",
-    "doc": "jsdoc -c jsdoc.json -d jsdoc index.js lib/*.js"
+    "doc": "jsdox -o doc index.js lib/*.js"
   },
   "repository": {
     "type": "git",
@@ -33,6 +33,7 @@
   },
   "homepage": "https://github.com/commenthol/mock-http",
   "dependencies": {
+    "mergee": "~0.1.1",
     "streamss-shim": "~0.0.1"
   },
   "devDependencies": {

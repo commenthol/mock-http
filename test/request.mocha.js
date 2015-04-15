@@ -74,9 +74,15 @@ describe('#Request', function(){
 	});
 	it('can set a request header', function(){
 		var req = new Request();
-		var header = ['user-agent', 'Mozilla/5.0 (Awesome; rv:1.0)'];
+		var header = ['User-Agent', 'Mozilla/5.0 (Awesome; rv:1.0)'];
 		req.setHeader(header[0], header[1]);
 		assert.equal(req.getHeader(header[0]), header[1]);
+	});
+	it('can set a url instead of options', function() {
+		var url = '/path/?kh=-1&q=node';
+		var req = Request(url);
+		assert.equal(req.url, url);
+		assert.equal(req.method, 'GET');
 	});
 	it('can set a timeout', function(done) {
 		var url = '/path/?kh=-1&q=node';
@@ -129,5 +135,15 @@ describe('#Request', function(){
 				})
 			);
 	});
+	it('repects lowercase headers in .headers', function(){
+		var headers = { Authorization: 'Bearer 552d9922b59dd27b383d9674' };
+		var req = new Request({url:'/', method:'get', headers:headers});
 
+		assert.equal(req.getHeader('Authorization'), headers.Authorization );
+		assert.equal(req.headers['authorization'], headers.Authorization );
+		assert.equal(req.headers['Authorization'], undefined );
+
+		assert.equal(req.rawHeaders['authorization'], undefined );
+		assert.equal(req.rawHeaders['Authorization'], headers.Authorization );
+	});
 });
