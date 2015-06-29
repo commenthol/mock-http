@@ -82,6 +82,7 @@ describe('#Response', function(){
 			});
 			assert.equal(res.headersSent, true);
 			assert.equal(res.statusCode, 200);
+			assert.equal(res.statusMessage, 'OK');
 			assert.equal(res._internal.reasonPhrase, 'OK');
 			assert.deepEqual(res.getHeader('Set-Cookie'), headers.setCookie[1]);
 			assert.deepEqual(res.getHeader('Cache-Control'), headers.cacheControl[1]);
