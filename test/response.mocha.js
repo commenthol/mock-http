@@ -12,6 +12,7 @@ var Response = require('../lib/response');
 var headers = {
 	cacheControl:[ 'Cache-Control', 'max-age=300' ],
 	setCookie:   [ 'Set-Cookie', [ 'session=dadadada', 'token=fefufefu' ] ],
+	connection:  [ 'Connection', 'keep-alive' ],
 };
 
 describe('#Response', function(){
@@ -92,8 +93,13 @@ describe('#Response', function(){
 		it('set user-agent', function(){
 			var res = new Response();
 			res.setHeader(h[0], h[1]);
+			res.setHeader(headers.connection[0], headers.connection[1]);
+
 			assert.equal(res._internal.headers[h[0].toLowerCase()], h[1]);
 			assert.equal(res.getHeader(h[0]), h[1]);
+
+			assert.deepEqual(res._headers, { 'cache-control': 'max-age=300', connection: 'keep-alive' } );
+			assert.deepEqual(res._headerNames, { 'cache-control': 'Cache-Control', connection: 'Connection' });
 		});
 		it('set, get and remove user-agent', function(){
 			var res = new Response();
