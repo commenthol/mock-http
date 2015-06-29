@@ -40,13 +40,26 @@ describe('#Request', function(){
 			url: '/path/?kh=-1&q=node',
 			method: 'post',
 			headers: {
-				'user-agent': 'Mozilla/5.0 (Awesome; rv:1.0)'
+				'User-Agent': 'Mozilla/5.0 (Awesome; rv:1.0)'
 			}
 		};
 		var req = new Request(options);
 		assert.equal(req.url, options.url);
 		assert.equal(req.method, options.method);
-		assert.deepEqual(req.headers, options.headers);
+		assert.deepEqual(req.headers, { 'user-agent': 'Mozilla/5.0 (Awesome; rv:1.0)' });
+		assert.deepEqual(req.rawHeaders, [ 'User-Agent', 'Mozilla/5.0 (Awesome; rv:1.0)' ]);
+	});
+	it('can set rawHeaders', function(){
+		var options = {
+			url: '/path/?kh=-1&q=node',
+			method: 'post',
+			rawHeaders: [ 'User-Agent', 'Mozilla/5.0 (Awesome; rv:1.0)' ]
+		};
+		var req = new Request(options);
+		assert.equal(req.url, options.url);
+		assert.equal(req.method, options.method);
+		assert.deepEqual(req.headers, { 'user-agent': 'Mozilla/5.0 (Awesome; rv:1.0)' });
+		assert.deepEqual(req.rawHeaders, [ 'User-Agent', 'Mozilla/5.0 (Awesome; rv:1.0)' ]);
 	});
 	it('can set remoteAddress', function(){
 		var options = {
@@ -137,13 +150,12 @@ describe('#Request', function(){
 	});
 	it('repects lowercase headers in .headers', function(){
 		var headers = { Authorization: 'Bearer 552d9922b59dd27b383d9674' };
-		var req = new Request({url:'/', method:'get', headers:headers});
+		var req = new Request({url:'/', method:'get', headers: headers});
 
 		assert.equal(req.getHeader('Authorization'), headers.Authorization );
 		assert.equal(req.headers['authorization'], headers.Authorization );
 		assert.equal(req.headers['Authorization'], undefined );
 
-		assert.equal(req.rawHeaders['authorization'], undefined );
-		assert.equal(req.rawHeaders['Authorization'], headers.Authorization );
+		assert.deepEqual(req.rawHeaders, [ 'Authorization', 'Bearer 552d9922b59dd27b383d9674' ] );
 	});
 });
