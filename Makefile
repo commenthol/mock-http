@@ -1,4 +1,4 @@
-all: v0.8 v0.10 v0.12
+all: v0.8 v0.10 v0.11 v0.12 v4.2 v5.2
 
 doc:
 	@npm run doc
