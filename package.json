@@ -11,7 +11,7 @@
   },
   "scripts": {
     "test": "mocha",
-    "lint": "jshint *.js */*.js",
+    "lint": "eslint '*.js' '**/*.js'",
     "cover": "istanbul cover _mocha --report lcov --report text -- -R dot --check-leaks test/*.mocha.js",
     "doc": "jsdox -o doc index.js lib/*.js"
   },
@@ -33,12 +33,19 @@
   },
   "homepage": "https://github.com/commenthol/mock-http",
   "dependencies": {
-    "mergee": "~0.1.1",
-    "streamss-shim": "~0.0.1"
+    "mergee": "~0.2.4",
+    "streamss-shim": "~0.0.2"
   },
   "devDependencies": {
     "connect-chain-if": "~0.0.3",
     "mocha": "*",
-    "streamss": "~0.2.3"
+    "streamss": "~0.2.5"
+  },
+  "eslintConfig": {
+    "extends": "standard",
+    "plugins": [
+      "standard"
+    ],
+    "rules": {}
   }
 }

@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 /**
  * @module mock-http
@@ -6,10 +6,9 @@
  * @license MIT
  */
 
-var util = require('util');
-var assign = require('./lib/assign');
-var Request = require('./lib/request');
-var Response = require('./lib/response');
+var assign = require('./lib/assign')
+var Request = require('./lib/request')
+var Response = require('./lib/response')
 
 /**
  * mock middleware
@@ -17,15 +16,15 @@ var Response = require('./lib/response');
  * @param {Object} res - request which gets extended by Response
  * @param {Function} next - next middleware function
  */
-var M = function(req, res, next) {
-    assign(req, new Request(), false);
-    assign(res, new Response(), false);
-    next && next();
-};
+var M = function (req, res, next) {
+  assign(req, new Request(), false)
+  assign(res, new Response(), false)
+  next && next()
+}
 
 /** @exports lib/Request */
-M.Request = Request;
+M.Request = Request
 /** @exports lib/Response */
-M.Response = Response;
+M.Response = Response
 
-module.exports = M;
+module.exports = M
