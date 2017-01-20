@@ -1,6 +1,6 @@
 {
   "name": "mock-http",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "mock http request response",
   "main": "index.js",
   "directories": {
