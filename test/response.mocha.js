@@ -3,8 +3,8 @@
 /* globals describe, it, before */
 
 var assert = require('assert')
-var Writable = require('streamss-shim').Writable
-var Readable = require('streamss-shim').Readable
+var Writable = require('stream').Writable
+var Readable = require('stream').Readable
 
 var Response = require('../lib/response')
 
@@ -208,7 +208,7 @@ describe('#Response', function () {
     })
     it('buffered data', function () {
       var res = new Response()
-      res.write(new Buffer(str))
+      res.write(Buffer.from(str))
       assert.equal(res._internal.buffer.toString(), str)
     })
   })
@@ -255,7 +255,7 @@ describe('#Response', function () {
     })
     it('call end with some buffered data', function () {
       var res = new Response()
-      res.end(new Buffer(str))
+      res.end(Buffer.from(str))
       assert.equal(res._internal.buffer.toString(), str)
       assert.equal(res._internal.ended, true)
       assert.equal(res.headersSent, true)

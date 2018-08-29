@@ -137,11 +137,11 @@ describe('example', function () {
     var req = new mock.Request({
       url: '/test',
       method: 'POST',
-      buffer: new Buffer('name=mock&version=first')
+      buffer: Buffer.from('name=mock&version=first')
     })
     var res = new mock.Response({
       onEnd: function () {
-          // the test ends here
+        // the test ends here
         assert.equal(req.url, '/')
         assert.equal(req.params, 'name=mock&version=first')
         assert.equal(res.statusCode, 200)
@@ -159,7 +159,7 @@ describe('example', function () {
     var req = new mock.Request({
       url: '/other',
       method: 'POST',
-      buffer: new Buffer('name=mock&version=first')
+      buffer: Buffer.from('name=mock&version=first')
     })
     var res = new mock.Response({
       onEnd: function () {

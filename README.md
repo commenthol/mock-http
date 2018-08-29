@@ -39,21 +39,23 @@ Mock implementation of Class [http.ServerResponse](http://nodejs.org/api/http.ht
 It behaves like the class, apart from really handling a socket. I.e. it implements the Writable Stream Class as well.
 All methods can be used to mock a server response such allowing to unit-test e.g. connect middleware
 
-States are stored in the interal object `Response._internal` and can be queried from your unit-tests
+States are stored in the internal object `Response._internal` and can be queried from your unit-tests
 
-    _internal: {
-      headers: {},            // {Object}  Response headers
-      trailers: {},           // {Object}  Trailing Response headers
-      buffer: new Buffer(''), // {Buffer}  Internal buffer represents response body
-      timedout: false,        // {Boolean} If true than `Response.setTimeout` was called.
-      ended: false,           // {Boolean} If true than `Response.end` was called.
-    }
+```js
+_internal: {
+  headers: {},             // {Object}  Response headers
+  trailers: {},            // {Object}  Trailing Response headers
+  buffer: Buffer.from(''), // {Buffer}  Internal buffer represents response body
+  timedout: false,         // {Boolean} If true than `Response.setTimeout` was called.
+  ended: false,            // {Boolean} If true than `Response.end` was called.
+}
+```
 
 ## Usage
 
 This is a unit-test using mocha which illustrates the usage. The example can be found in [./test/index.mocha.js](./test/index.mocha.js)
 
-```javascript
+```js
 describe('example', function(){
     // a middleware function under test
     var middleware = function(req, res, next) {
@@ -79,7 +81,7 @@ describe('example', function(){
         var req = new mock.Request({
                     url: '/test',
                     method: 'POST',
-                    buffer: new Buffer('name=mock&version=first')
+                    buffer: Buffer.from('name=mock&version=first')
                 });
         var res = new mock.Response({
                 onEnd: function() {
@@ -101,7 +103,7 @@ describe('example', function(){
         var req = new mock.Request({
                     url: '/other',
                     method: 'POST',
-                    buffer: new Buffer('name=mock&version=first')
+                    buffer: Buffer.from('name=mock&version=first')
                 });
         var res = new mock.Response({
                 onEnd: function() {
@@ -136,7 +138,7 @@ all code is your original work.
 
 ## License
 
-Copyright (c) 2014-2015, Commenthol. (MIT License)
+Copyright (c) 2014-present Commenthol. (MIT License)
 
 See [LICENSE][] for more info.
 

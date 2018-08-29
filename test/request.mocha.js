@@ -3,7 +3,7 @@
 /* globals describe, it */
 
 var assert = require('assert')
-var Readable = require('streamss-shim').Readable
+var Readable = require('stream').Readable
 var Through = require('streamss').Through
 
 var Request = require('../lib/request')
@@ -134,7 +134,7 @@ describe('#Request', function () {
     var query = 'name=node&stream=version2'
     var req = new Request({
       highWaterMark: 5,
-      buffer: new Buffer(query),
+      buffer: Buffer.from(query),
       emitClose: 12
     })
 
@@ -145,7 +145,7 @@ describe('#Request', function () {
       assert.equal(buf, 'name=node&strea')
       done()
     })
-      )
+    )
   })
   it('repects lowercase headers in .headers', function () {
     var headers = { Authorization: 'Bearer 552d9922b59dd27b383d9674' }
