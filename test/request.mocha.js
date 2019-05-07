@@ -15,24 +15,24 @@ describe('#Request', function () {
   })
   it('has url "/"', function () {
     var req = new Request()
-    assert.equal(req.url, '/')
+    assert.strictEqual(req.url, '/')
   })
   it('can set url', function () {
     var url = '/path/?kh=-1&q=node'
     var req = new Request(url)
-    assert.equal(req.url, url)
+    assert.strictEqual(req.url, url)
   })
   it('has httpVersion 1.0', function () {
     var req = new Request()
-    assert.equal(req.httpVersion, '1.0')
-    assert.equal(req.httpVersionMajor, 1)
-    assert.equal(req.httpVersionMinor, 0)
+    assert.strictEqual(req.httpVersion, '1.0')
+    assert.strictEqual(req.httpVersionMajor, 1)
+    assert.strictEqual(req.httpVersionMinor, 0)
   })
   it('can set httpVersion', function () {
-    var req = new Request({httpVersion: '2.1'})
-    assert.equal(req.httpVersion, '2.1')
-    assert.equal(req.httpVersionMajor, 2)
-    assert.equal(req.httpVersionMinor, 1)
+    var req = new Request({ httpVersion: '2.1' })
+    assert.strictEqual(req.httpVersion, '2.1')
+    assert.strictEqual(req.httpVersionMajor, 2)
+    assert.strictEqual(req.httpVersionMinor, 1)
   })
   it('can set options', function () {
     var options = {
@@ -43,10 +43,10 @@ describe('#Request', function () {
       }
     }
     var req = new Request(options)
-    assert.equal(req.url, options.url)
-    assert.equal(req.method, options.method)
-    assert.deepEqual(req.headers, { 'user-agent': 'Mozilla/5.0 (Awesome; rv:1.0)' })
-    assert.deepEqual(req.rawHeaders, [ 'User-Agent', 'Mozilla/5.0 (Awesome; rv:1.0)' ])
+    assert.strictEqual(req.url, options.url)
+    assert.strictEqual(req.method, options.method)
+    assert.deepStrictEqual(req.headers, { 'user-agent': 'Mozilla/5.0 (Awesome; rv:1.0)' })
+    assert.deepStrictEqual(req.rawHeaders, [ 'User-Agent', 'Mozilla/5.0 (Awesome; rv:1.0)' ])
   })
   it('can set rawHeaders', function () {
     var options = {
@@ -55,10 +55,10 @@ describe('#Request', function () {
       rawHeaders: [ 'User-Agent', 'Mozilla/5.0 (Awesome; rv:1.0)' ]
     }
     var req = new Request(options)
-    assert.equal(req.url, options.url)
-    assert.equal(req.method, options.method)
-    assert.deepEqual(req.headers, { 'user-agent': 'Mozilla/5.0 (Awesome; rv:1.0)' })
-    assert.deepEqual(req.rawHeaders, [ 'User-Agent', 'Mozilla/5.0 (Awesome; rv:1.0)' ])
+    assert.strictEqual(req.url, options.url)
+    assert.strictEqual(req.method, options.method)
+    assert.deepStrictEqual(req.headers, { 'user-agent': 'Mozilla/5.0 (Awesome; rv:1.0)' })
+    assert.deepStrictEqual(req.rawHeaders, [ 'User-Agent', 'Mozilla/5.0 (Awesome; rv:1.0)' ])
   })
   it('can set remoteAddress', function () {
     var options = {
@@ -67,7 +67,7 @@ describe('#Request', function () {
       }
     }
     var req = new Request(options)
-    assert.deepEqual(req.connection, {
+    assert.deepStrictEqual(req.connection, {
       remoteAddress: '10.0.0.0',
       remotePort: 51501
     })
@@ -79,7 +79,7 @@ describe('#Request', function () {
       }
     }
     var req = new Request(options)
-    assert.deepEqual(req.connection, {
+    assert.deepStrictEqual(req.connection, {
       remoteAddress: '127.0.0.1',
       remotePort: 80
     })
@@ -88,13 +88,13 @@ describe('#Request', function () {
     var req = new Request()
     var header = ['User-Agent', 'Mozilla/5.0 (Awesome; rv:1.0)']
     req.setHeader(header[0], header[1])
-    assert.equal(req.getHeader(header[0]), header[1])
+    assert.strictEqual(req.getHeader(header[0]), header[1])
   })
   it('can set a url instead of options', function () {
     var url = '/path/?kh=-1&q=node'
     var req = Request(url)
-    assert.equal(req.url, url)
-    assert.equal(req.method, 'GET')
+    assert.strictEqual(req.url, url)
+    assert.strictEqual(req.method, 'GET')
   })
   it('can set a timeout', function (done) {
     var url = '/path/?kh=-1&q=node'
@@ -124,7 +124,7 @@ describe('#Request', function () {
     req.pipe(new Through(function (data) {
       buf += data.toString()
     }, function () {
-      assert.equal(buf, query)
+      assert.strictEqual(buf, query)
       done()
     })
     )
@@ -142,19 +142,19 @@ describe('#Request', function () {
     req.pipe(new Through(function (data) {
       buf += data.toString()
     }, function () {
-      assert.equal(buf, 'name=node&strea')
+      assert.strictEqual(buf, 'name=node&strea')
       done()
     })
     )
   })
   it('repects lowercase headers in .headers', function () {
     var headers = { Authorization: 'Bearer 552d9922b59dd27b383d9674' }
-    var req = new Request({url: '/', method: 'get', headers: headers})
+    var req = new Request({ url: '/', method: 'get', headers: headers })
 
-    assert.equal(req.getHeader('Authorization'), headers.Authorization)
-    assert.equal(req.headers['authorization'], headers.Authorization)
-    assert.equal(req.headers['Authorization'], undefined)
+    assert.strictEqual(req.getHeader('Authorization'), headers.Authorization)
+    assert.strictEqual(req.headers['authorization'], headers.Authorization)
+    assert.strictEqual(req.headers['Authorization'], undefined)
 
-    assert.deepEqual(req.rawHeaders, [ 'Authorization', 'Bearer 552d9922b59dd27b383d9674' ])
+    assert.deepStrictEqual(req.rawHeaders, [ 'Authorization', 'Bearer 552d9922b59dd27b383d9674' ])
   })
 })

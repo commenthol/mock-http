@@ -33,12 +33,12 @@
   },
   "homepage": "https://github.com/commenthol/mock-http",
   "dependencies": {
-    "mergee": "^0.2.4"
+    "mergee": "^0.2.5"
   },
   "devDependencies": {
     "connect-chain-if": "^1.0.0",
-    "mocha": "*",
-    "streamss": "^1.0.0"
+    "mocha": "^6.1.4",
+    "streamss": "^1.0.1"
   },
   "eslintConfig": {
     "extends": "standard",

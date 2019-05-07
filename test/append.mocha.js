@@ -9,26 +9,26 @@ describe('#append', function () {
   it('append only data', function () {
     var res = append(undefined, 'append this')
     var exp = Buffer.from('append this')
-    assert.deepEqual(res, exp)
+    assert.deepStrictEqual(res, exp)
   })
   it('append string to buffer', function () {
     var res = append(Buffer.from('do '), 'append this')
     var exp = Buffer.from('do append this')
-    assert.deepEqual(res, exp)
+    assert.deepStrictEqual(res, exp)
   })
   it('append buffer to buffer', function () {
     var res = append(Buffer.from('do '), Buffer.from('append this'))
     var exp = Buffer.from('do append this')
-    assert.deepEqual(res, exp)
+    assert.deepStrictEqual(res, exp)
   })
   it('no append', function () {
     var res = append(Buffer.from('append this'))
     var exp = Buffer.from('append this')
-    assert.deepEqual(res, exp)
+    assert.deepStrictEqual(res, exp)
   })
   it('append to buffer with base64', function () {
     var res = append(undefined, 'append this', 'base64')
     var exp = Buffer.from('append this'.toString('base64'))
-    assert.deepEqual(res, exp)
+    assert.deepStrictEqual(res, exp)
   })
 })

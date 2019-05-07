@@ -16,9 +16,9 @@ describe('#mock', function () {
     chain([
       mock
     ])(req, res, function () {
-      assert.equal(req.url, '/')
-      assert.equal(res.headersSent, false)
-      assert.equal(res.statusCode, undefined)
+      assert.strictEqual(req.url, '/')
+      assert.strictEqual(res.headersSent, false)
+      assert.strictEqual(res.statusCode, undefined)
       done()
     })
   })
@@ -38,10 +38,10 @@ describe('#mock', function () {
         next()
       }
     ])(req, res, function () {
-      assert.equal(req.url, '/')
-      assert.equal(req.headers.userAgent, 'Mozilla/5.0 (Awesome/1.0)')
-      assert.deepEqual(res.getHeader('set-cookie'), ['test=1', 'language=de'])
-      assert.equal(res.headersSent, false)
+      assert.strictEqual(req.url, '/')
+      assert.strictEqual(req.headers.userAgent, 'Mozilla/5.0 (Awesome/1.0)')
+      assert.deepStrictEqual(res.getHeader('set-cookie'), ['test=1', 'language=de'])
+      assert.strictEqual(res.headersSent, false)
       done()
     })
   })
@@ -61,10 +61,10 @@ describe('#mock', function () {
         next && next()
       }
     ])(req, res, function () {
-      assert.equal(req.url, '/')
-      assert.equal(req.headers.userAgent, 'Mozilla/5.0 (Awesome/1.0)')
-      assert.equal(res.headersSent, true)
-      assert.equal(res.statusCode, 200)
+      assert.strictEqual(req.url, '/')
+      assert.strictEqual(req.headers.userAgent, 'Mozilla/5.0 (Awesome/1.0)')
+      assert.strictEqual(res.headersSent, true)
+      assert.strictEqual(res.statusCode, 200)
       done()
     })
   })
@@ -82,10 +82,10 @@ describe('#mock', function () {
         next && next()
       }
     ])(req, res, function () {
-      assert.equal(req.url, '/')
-      assert.equal(res.headersSent, true)
-      assert.equal(res.statusCode, 200)
-      assert.equal(res.getBuffer(), 'this is a test')
+      assert.strictEqual(req.url, '/')
+      assert.strictEqual(res.headersSent, true)
+      assert.strictEqual(res.statusCode, 200)
+      assert.strictEqual(res.getBuffer(), 'this is a test')
       done()
     })
   })
@@ -104,10 +104,10 @@ describe('#mock', function () {
           })
       }
     ])(req, res, function () {
-      assert.equal(req.url, '/')
-      assert.equal(res.headersSent, true)
-      assert.equal(res.statusCode, 200)
-      assert.equal(res.getBuffer().substr(0, 12), "'use strict'")
+      assert.strictEqual(req.url, '/')
+      assert.strictEqual(res.headersSent, true)
+      assert.strictEqual(res.statusCode, 200)
+      assert.strictEqual(res.getBuffer().substr(0, 12), "'use strict'")
       done()
     })
   })
@@ -125,7 +125,7 @@ describe('example', function () {
     req.on('end', function () {
       if (regex.test(req.url)) {
         req.url = req.url.replace(regex, '$1') || '/'
-        res.writeHead(200, {'Cache-Control': 'max-age=300'})
+        res.writeHead(200, { 'Cache-Control': 'max-age=300' })
         res.write('this is a test')
         res.end()
       } else {
@@ -142,17 +142,17 @@ describe('example', function () {
     var res = new mock.Response({
       onEnd: function () {
         // the test ends here
-        assert.equal(req.url, '/')
-        assert.equal(req.params, 'name=mock&version=first')
-        assert.equal(res.statusCode, 200)
-        assert.equal(res.headersSent, true)
-        assert.equal(res.getHeader('Cache-Control'), 'max-age=300')
-        assert.equal(res.hasEnded(), true)
+        assert.strictEqual(req.url, '/')
+        assert.strictEqual(req.params, 'name=mock&version=first')
+        assert.strictEqual(res.statusCode, 200)
+        assert.strictEqual(res.headersSent, true)
+        assert.strictEqual(res.getHeader('Cache-Control'), 'max-age=300')
+        assert.strictEqual(res.hasEnded(), true)
         done()
       }
     })
     middleware(req, res, function () {
-      assert.equal('test never', 'reaches here')
+      assert.strictEqual('test never', 'reaches here')
     })
   })
   it('shall call next middleware', function (done) {
@@ -163,14 +163,14 @@ describe('example', function () {
     })
     var res = new mock.Response({
       onEnd: function () {
-        assert.equal('test never', 'reaches here')
+        assert.strictEqual('test never', 'reaches here')
       }
     })
     middleware(req, res, function () {
       // the test ends here
-      assert.equal(req.url, '/other')
-      assert.equal(res.headersSent, false)
-      assert.equal(res.hasEnded(), false)
+      assert.strictEqual(req.url, '/other')
+      assert.strictEqual(res.headersSent, false)
+      assert.strictEqual(res.hasEnded(), false)
       done()
     })
   })
