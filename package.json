@@ -25,6 +25,7 @@
     "test": "test"
   },
   "scripts": {
+    "all": "npm run lint && npm t",
     "cover": "nyc -r lcov -r text npm test",
     "doc": "jsdox -o doc index.js lib/*.js",
     "lint": "eslint '*.js' '**/*.js'",
@@ -38,12 +39,12 @@
     "rules": {}
   },
   "dependencies": {
-    "mergee": "^0.2.5"
+    "mergee": "^1.0.0"
   },
   "devDependencies": {
     "connect-chain-if": "^1.0.0",
-    "mocha": "^6.1.4",
-    "streamss": "^1.0.1"
+    "mocha": "^6.2.2",
+    "streamss": "^1.0.2"
   },
   "engines": {
     "node": ">=6.0.0"
