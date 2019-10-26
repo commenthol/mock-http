@@ -2,6 +2,7 @@
 /coverage
 /doc
 /tmp
+/test
 *.log
 *.tgz
 .*
