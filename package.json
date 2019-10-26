@@ -2,37 +2,41 @@
   "name": "mock-http",
   "version": "1.0.1",
   "description": "mock http request response",
-  "main": "index.js",
-  "types": "index.d.ts",
-  "directories": {
-    "test": "test"
-  },
-  "engines": {
-    "node": ">=6.0.0"
-  },
-  "scripts": {
-    "test": "mocha",
-    "lint": "eslint '*.js' '**/*.js'",
-    "cover": "nyc -r lcov -r text npm test",
-    "doc": "jsdox -o doc index.js lib/*.js"
+  "keywords": [
+    "http",
+    "mock",
+    "request",
+    "response",
+    "stream"
+  ],
+  "homepage": "https://github.com/commenthol/mock-http",
+  "bugs": {
+    "url": "https://github.com/commenthol/mock-http/issues"
   },
   "repository": {
     "type": "git",
     "url": "github.com/commenthol/mock-http"
   },
-  "keywords": [
-    "mock",
-    "http",
-    "request",
-    "response",
-    "stream"
-  ],
-  "author": "commenthol <commenthol@gmail.com>",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/commenthol/mock-http/issues"
+  "author": "commenthol <commenthol@gmail.com>",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "directories": {
+    "test": "test"
   },
-  "homepage": "https://github.com/commenthol/mock-http",
+  "scripts": {
+    "cover": "nyc -r lcov -r text npm test",
+    "doc": "jsdox -o doc index.js lib/*.js",
+    "lint": "eslint '*.js' '**/*.js'",
+    "test": "mocha"
+  },
+  "eslintConfig": {
+    "extends": "standard",
+    "plugins": [
+      "standard"
+    ],
+    "rules": {}
+  },
   "dependencies": {
     "mergee": "^0.2.5"
   },
@@ -41,11 +45,7 @@
     "mocha": "^6.1.4",
     "streamss": "^1.0.1"
   },
-  "eslintConfig": {
-    "extends": "standard",
-    "plugins": [
-      "standard"
-    ],
-    "rules": {}
+  "engines": {
+    "node": ">=6.0.0"
   }
 }
