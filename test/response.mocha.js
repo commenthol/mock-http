@@ -9,9 +9,10 @@ var Readable = require('stream').Readable
 var Response = require('../lib/response')
 
 var headers = {
-  cacheControl: [ 'Cache-Control', 'max-age=300' ],
-  setCookie: [ 'Set-Cookie', [ 'session=dadadada', 'token=fefufefu' ] ],
-  connection: [ 'Connection', 'keep-alive' ]
+  userAgent: ['User-Agent', 'Mozilla/5.0'],
+  cacheControl: ['Cache-Control', 'max-age=300'],
+  setCookie: ['Set-Cookie', ['session=dadadada', 'token=fefufefu']],
+  connection: ['Connection', 'keep-alive']
 }
 
 describe('#Response', function () {
@@ -120,6 +121,43 @@ describe('#Response', function () {
     })
   })
 
+  describe('#getHeaders', function () {
+    it('hasHeader user-agent', function () {
+      var h = headers.userAgent
+      var res = new Response()
+      res.setHeader(h[0], h[1])
+      assert.strictEqual(res.hasHeader(h[0]), true)
+      res.removeHeader(h[0])
+      assert.strictEqual(res.hasHeader(h[0]), false)
+      assert.strictEqual(res.hasHeader('Content-Type'), false)
+    })
+    it('getHeaders', function () {
+      var res = new Response()
+      res.setHeader(headers.userAgent[0], headers.userAgent[1])
+      res.setHeader(headers.cacheControl[0], headers.cacheControl[1])
+      res.setHeader(headers.setCookie[0], headers.setCookie[1])
+      assert.deepStrictEqual(res.getHeaders(), {
+        'user-agent': 'Mozilla/5.0',
+        'cache-control': 'max-age=300',
+        'set-cookie': [
+          'session=dadadada',
+          'token=fefufefu'
+        ]
+      })
+    })
+    it('getHeaderNames', function () {
+      var res = new Response()
+      res.setHeader(headers.userAgent[0], headers.userAgent[1])
+      res.setHeader(headers.cacheControl[0], headers.cacheControl[1])
+      res.setHeader(headers.setCookie[0], headers.setCookie[1])
+      assert.deepStrictEqual(res.getHeaderNames(), [
+        'user-agent',
+        'cache-control',
+        'set-cookie'
+      ])
+    })
+  })
+
   describe('#removeHeader', function () {
     it('removeHeader on undefined header', function () {
       var res = new Response()
@@ -181,8 +219,10 @@ describe('#Response', function () {
   describe('#addTrailers', function () {
     it('with sending "Trailer" header', function () {
       var res = new Response()
-      res.writeHead(200, { 'Content-Type': 'text/plain',
-        'Trailer': 'Content-MD5' })
+      res.writeHead(200, {
+        'Content-Type': 'text/plain',
+        Trailer: 'Content-MD5'
+      })
       res.write('fileData')
       res.addTrailers({ 'Content-MD5': '7895bf4b8828b55ceaf47747b4bca667' })
       res.end()

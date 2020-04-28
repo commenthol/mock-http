@@ -46,19 +46,19 @@ describe('#Request', function () {
     assert.strictEqual(req.url, options.url)
     assert.strictEqual(req.method, options.method)
     assert.deepStrictEqual(req.headers, { 'user-agent': 'Mozilla/5.0 (Awesome; rv:1.0)' })
-    assert.deepStrictEqual(req.rawHeaders, [ 'User-Agent', 'Mozilla/5.0 (Awesome; rv:1.0)' ])
+    assert.deepStrictEqual(req.rawHeaders, ['User-Agent', 'Mozilla/5.0 (Awesome; rv:1.0)'])
   })
   it('can set rawHeaders', function () {
     var options = {
       url: '/path/?kh=-1&q=node',
       method: 'post',
-      rawHeaders: [ 'User-Agent', 'Mozilla/5.0 (Awesome; rv:1.0)' ]
+      rawHeaders: ['User-Agent', 'Mozilla/5.0 (Awesome; rv:1.0)']
     }
     var req = new Request(options)
     assert.strictEqual(req.url, options.url)
     assert.strictEqual(req.method, options.method)
     assert.deepStrictEqual(req.headers, { 'user-agent': 'Mozilla/5.0 (Awesome; rv:1.0)' })
-    assert.deepStrictEqual(req.rawHeaders, [ 'User-Agent', 'Mozilla/5.0 (Awesome; rv:1.0)' ])
+    assert.deepStrictEqual(req.rawHeaders, ['User-Agent', 'Mozilla/5.0 (Awesome; rv:1.0)'])
   })
   it('can set remoteAddress', function () {
     var options = {
@@ -89,6 +89,17 @@ describe('#Request', function () {
     var header = ['User-Agent', 'Mozilla/5.0 (Awesome; rv:1.0)']
     req.setHeader(header[0], header[1])
     assert.strictEqual(req.getHeader(header[0]), header[1])
+  })
+  it('can remove a request header', function () {
+    var req = new Request({
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Awesome; rv:1.0)',
+        'Content-Type': 'application/json'
+      }
+    })
+    req.removeHeader('content-type')
+    assert.deepStrictEqual(req.headers, { 'user-agent': 'Mozilla/5.0 (Awesome; rv:1.0)' })
+    assert.deepStrictEqual(req.rawHeaders, ['User-Agent', 'Mozilla/5.0 (Awesome; rv:1.0)'])
   })
   it('can set a url instead of options', function () {
     var url = '/path/?kh=-1&q=node'
@@ -152,9 +163,9 @@ describe('#Request', function () {
     var req = new Request({ url: '/', method: 'get', headers: headers })
 
     assert.strictEqual(req.getHeader('Authorization'), headers.Authorization)
-    assert.strictEqual(req.headers['authorization'], headers.Authorization)
-    assert.strictEqual(req.headers['Authorization'], undefined)
+    assert.strictEqual(req.headers.authorization, headers.Authorization)
+    assert.strictEqual(req.headers.Authorization, undefined)
 
-    assert.deepStrictEqual(req.rawHeaders, [ 'Authorization', 'Bearer 552d9922b59dd27b383d9674' ])
+    assert.deepStrictEqual(req.rawHeaders, ['Authorization', 'Bearer 552d9922b59dd27b383d9674'])
   })
 })
