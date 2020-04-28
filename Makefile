@@ -1,4 +1,4 @@
-all: v8. v10. v12. v13.
+all: v8. v10. v12. v14.
 
 doc:
 	@npm run doc
