@@ -1,6 +1,6 @@
 # mock-http
 
-![NPM version](https://badge.fury.io/js/mock-http.svg)
+[![NPM version](https://badge.fury.io/js/mock-http.svg)](https://npmjs.com/package/mock-http)
 [![Build Status](https://secure.travis-ci.org/commenthol/mock-http.svg?branch=master)](https://travis-ci.org/commenthol/mock-http)
 
 > Mock http request response
